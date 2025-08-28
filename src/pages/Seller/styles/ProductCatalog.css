@@ -1,0 +1,378 @@
+
+/* --- Base Container & Font --- */
+.catalog-container {
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background-color: #f4f7fa;
+  font-family: 'Poppins', sans-serif;
+  color: #333;
+}
+
+
+
+/* --- Shared Card Style --- */
+.card {
+  background-color: #ffffff;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e0e0e0;
+}
+
+/* --- Header --- */
+.catalog-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.catalog-header h2 {
+  font-size: 1.8rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.header-actions {
+  display: flex;
+  gap: 1rem;
+}
+
+.header-actions button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  font-weight: 500;
+  border: none;
+  transition: all 0.3s ease;
+}
+
+.export-btn {
+  background-color: #fff;
+  color: #333;
+  border: 1px solid #ccc;
+}
+.export-btn:hover {
+  background-color: #f0f0f0;
+}
+
+.add-btn {
+  background-color: #4a90e2;
+  color: white;
+}
+.add-btn:hover {
+  background-color: #357abd;
+  box-shadow: 0 4px 10px rgba(74, 144, 226, 0.3);
+}
+
+/* --- Filters Bar --- */
+/* --- Filters Bar --- */
+.filters-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.search-wrapper {
+  position: relative;
+  flex: 1;
+  max-width: 400px;
+}
+
+.search-icon {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #777;
+  font-size: 1.1rem;
+}
+
+.search-wrapper input {
+  width: 100%;
+  padding: 10px 15px 10px 42px; /* space for icon */
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  font-size: 1rem;
+  transition: all 0.2s ease;
+}
+
+.search-wrapper input:focus {
+  outline: none;
+  border-color: #4a90e2;
+  box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.15);
+}
+
+.filter-options {
+  display: flex;
+  gap: 0.8rem;
+}
+
+.filter-options select {
+  padding: 10px 14px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  background: #fff;
+  font-size: 0.95rem;
+  color: #333;
+  cursor: pointer;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.filter-options select:hover {
+  border-color: #4a90e2;
+}
+
+.filter-options select:focus {
+  outline: none;
+  border-color: #4a90e2;
+  box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.15);
+}
+
+/* --- Table Styling --- */
+.table-container {
+  overflow-x: auto; /* For responsiveness */
+}
+
+.catalog-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.catalog-table th, .catalog-table td {
+  padding: 1rem;
+  vertical-align: middle;
+}
+
+.catalog-table thead {
+  background-color: #f9fafb;
+}
+
+.catalog-table th {
+  font-weight: 600;
+  color: #666;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  border-bottom: 2px solid #e0e0e0;
+}
+
+.catalog-table tbody tr {
+  border-bottom: 1px solid #e0e0e0;
+  transition: background-color 0.2s ease;
+}
+
+.catalog-table tbody tr:last-child {
+  border-bottom: none;
+}
+
+.catalog-table tbody tr:hover {
+  background-color: #f4f7fa;
+}
+
+/* --- Table Cell Content --- */
+.product-info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.product-img {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 8px;
+  background-color: #f0f0f0;
+}
+
+.product-name {
+  font-weight: 600;
+}
+
+.product-type {
+  font-size: 0.9rem;
+  color: #888;
+}
+
+.product-price {
+    font-weight: 500;
+}
+
+.product-rating {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-weight: 500;
+}
+
+.star-icon {
+  color: #f5c518;
+}
+
+.rating-votes {
+  font-size: 0.9rem;
+  color: #888;
+  font-weight: 400;
+}
+
+/* Status Pill */
+.status-pill {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+.status-pill::before {
+  content: '';
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-right: 8px;
+}
+
+.status-pill.in-stock {
+  color: #03543f;
+  background-color: #def7ec;
+}
+.status-pill.in-stock::before {
+  background-color: #059669;
+}
+
+.status-pill.low-stock {
+  color: #92400e;
+  background-color: #fef3c7;
+}
+.status-pill.low-stock::before {
+  background-color: #f59e0b;
+}
+
+.status-pill.out-of-stock {
+  color: #991b1b;
+  background-color: #fee2e2;
+}
+.status-pill.out-of-stock::before {
+  background-color: #ef4444;
+}
+
+
+.product-actions {
+  display: flex;
+  
+  align-items: center;
+  gap: 8px; /* space between icons */
+  justify-content: center; /* center inside cell */
+}
+
+/* Action buttons (edit / delete) */
+.action-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  font-size: 16px;
+  border-radius: 50%;
+  
+}
+
+.action-btn.edit {
+  background: #3498db;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+.action-btn.edit:hover {
+  background: #2980b9;
+}
+
+.action-btn.delete {
+  background: #e74c3c;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+.action-btn.delete:hover {
+  background: #c0392b;
+}
+
+
+
+/* --- Responsiveness --- */
+@media (max-width: 768px) {
+  .catalog-header, .filters-bar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+  .filter-options {
+    flex-direction: column;
+    width: 100%;
+  }
+  .filter-options select {
+    width: 100%;
+  }
+}
+
+.bulk-actions {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  transition: all 0.3s ease;
+  opacity: 0;
+  transform: translateY(20px);
+  pointer-events: none;
+}
+
+.bulk-actions.active {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.bulk-delete-btn {
+  background: #d32f2f;
+  color: white;
+  padding: 10px 18px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.bulk-delete-btn:hover {
+  background: #b71c1c;
+}
+
+
+.reset-btn {
+  background: #f1f1f1;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  color: #333;
+}
+
+.reset-btn:hover {
+  background: #e0e0e0;
+}
+
+

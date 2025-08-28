@@ -1,0 +1,122 @@
+/* Container */
+.carbon-reports-container {
+  padding: 25px;
+  font-family: 'Poppins', sans-serif;
+  background-color: #f9f9f9;
+  color: #333;
+}
+
+/* Page Title */
+.carbon-reports-container h2 {
+  font-size: 28px;
+  margin-bottom: 20px;
+  font-weight: 600;
+}
+
+/* Filters Section */
+/* Filters Section */
+/* Filters Section */
+.reports-filters {
+  display: flex;
+  align-items: center;
+  justify-content: center; /* Center everything */
+  gap: 10px;
+  margin-bottom: 25px;
+  flex-wrap: wrap; /* Wrap on smaller screens */
+}
+
+.reports-filters label {
+  font-weight: 500;
+}
+
+.reports-filters select {
+  padding: 5px 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 13px;
+  width: 150px; /* Reduced width */
+  text-align: center;
+}
+
+.export-btn {
+  background-color: #2196f3;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.export-btn:hover {
+  background-color: #1976d2;
+}
+
+
+
+/* Quick Stats Cards */
+.reports-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 20px;
+  margin-bottom: 35px;
+}
+
+.stat-card {
+  background-color: white;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  text-align: center;
+}
+
+.stat-card h3 {
+  font-size: 16px;
+  font-weight: 500;
+  margin-bottom: 10px;
+  color: #555;
+}
+
+.stat-card p {
+  font-size: 20px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.stat-card .positive {
+  color: #4caf50;
+}
+
+/* Charts Grid */
+.charts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 25px;
+}
+
+/* Individual Chart Card */
+.chart-card {
+  background-color: white;
+  border-radius: 12px;
+  padding: 15px 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.chart-card h3 {
+  font-size: 18px;
+  margin-bottom: 15px;
+  font-weight: 500;
+  color: #333;
+}
+
+/* Responsive tweaks */
+@media screen and (max-width: 768px) {
+  .reports-stats {
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  }
+
+  .charts-grid {
+    grid-template-columns: 1fr;
+  }
+}

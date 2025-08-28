@@ -1,0 +1,196 @@
+/* Layout */
+.dashboard {
+  min-height: 100vh;
+  background: linear-gradient(to bottom, #ecfdf5, #fff);
+  font-family: Arial, sans-serif;
+  color: #222;
+}
+.container {
+  max-width: 1200px;
+  margin: auto;
+  padding: 20px;
+}
+.dashboard-header {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+.dashboard-title {
+  font-size: 1.8rem;
+  font-weight: bold;
+}
+.dashboard-subtitle {
+  font-size: 0.9rem;
+  color: #666;
+}
+.header-actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+/* Search box */
+.search-box {
+  position: relative;
+}
+.search-box input {
+  padding: 8px 10px 8px 30px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
+.search-icon {
+  position: absolute;
+  top: 50%;
+  left: 8px;
+  transform: translateY(-50%);
+  color: #888;
+}
+
+/* Buttons & Select */
+.eco-toggle {
+  padding: 6px 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background: #fff;
+  cursor: pointer;
+}
+.eco-toggle.active {
+  background: #059669;
+  color: #fff;
+  border-color: #059669;
+}
+select {
+  padding: 6px 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
+
+/* Stat Cards */
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 16px;
+  margin-bottom: 20px;
+}
+.stat-card {
+  display: flex;
+  gap: 12px;
+  background: #fff;
+  padding: 16px;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+.stat-icon {
+  padding: 10px;
+  background: #f3f4f6;
+  border-radius: 12px;
+}
+.stat-content {
+  flex: 1;
+}
+.stat-title {
+  font-size: 0.8rem;
+  color: #666;
+}
+.stat-value {
+  font-size: 1.4rem;
+  font-weight: bold;
+}
+.stat-sub {
+  font-size: 0.7rem;
+  color: #888;
+}
+
+/* Card */
+.card {
+  background: #fff;
+  padding: 16px;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+.card-title {
+  font-size: 1rem;
+  font-weight: bold;
+}
+.small-note {
+  font-size: 0.75rem;
+  color: #666;
+}
+
+/* Grid layouts */
+.grid-3 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+  margin-bottom: 20px;
+}
+.chart {
+  height: 280px;
+}
+
+/* Eco Tips */
+.eco-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.eco-tip {
+  display: flex;
+  gap: 8px;
+  padding: 8px;
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: 8px;
+  font-size: 0.9rem;
+}
+.eco-icon {
+  margin-top: 2px;
+}
+
+/* Table */
+.table-container {
+  overflow-x: auto;
+}
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+.table th, .table td {
+  padding: 8px;
+  border-bottom: 1px solid #eee;
+}
+.table th {
+  text-align: left;
+  color: #666;
+}
+
+/* Quick Actions */
+.quick-actions {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+.quick-actions button {
+  padding: 10px;
+  border: none;
+  border-radius: 12px;
+  background: #059669;
+  color: #fff;
+  font-weight: 500;
+  cursor: pointer;
+}
+.quick-actions button:hover {
+  opacity: 0.9;
+}
+.note {
+  font-size: 0.75rem;
+  color: #666;
+  margin-top: 6px;
+}
