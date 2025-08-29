@@ -14,16 +14,13 @@ import {
 } from "recharts";
 import { FiDownload } from "react-icons/fi";
 import "../styles/CarbonReports.css";
-import { useGlobal } from "../../../Global";
 
 const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#A28CFE", "#FF6B6B"];
 
-const CarbonReports = () => {
-
+const CarbonReports = ({ orders = [] }) => {
   // Convert date string to month (0-11)
   const getMonth = (dateStr) => new Date(dateStr).getMonth();
-  const { orders } = useGlobal();
-  
+
   // Filter orders for current month and last month
   const currentMonth = new Date().getMonth();
   const lastMonth = currentMonth === 0 ? 11 : currentMonth - 1;
@@ -59,31 +56,26 @@ const CarbonReports = () => {
   const savedCO2 = lastMonthCarbon - totalCarbon;
 
   // Category-wise emissions
-const categoryData = useMemo(() => {
-  const map = {};
-  currentMonthOrders.forEach(o => {
-    const cat = o.category || o.product?.category || "Other";
-    const footprint = o.product?.carbonFootprint || o.carbonFootprint || 0;
-    map[cat] = (map[cat] || 0) + footprint * (o.quantity || 1);
-  });
-  return Object.entries(map).map(([name, value]) => ({
-    name,
-    value: Number(value.toFixed(2))
-  }));
-}, [currentMonthOrders]);
+  const categoryData = useMemo(() => {
+    const map = {};
+    currentMonthOrders.forEach((o) => {
+      const cat = o.type || "Other";
+      map[cat] = (map[cat] || 0) + (o.footprint || 0) * (o.quantity || 1);
+    });
+    return Object.entries(map).map(([name, value]) => ({ name, value: Number(value.toFixed(2)) }));
+  }, [currentMonthOrders]);
 
   // Seller eco ranking
   const sellerData = useMemo(() => {
-  const map = {};
-  currentMonthOrders.forEach(o => {
-    const seller = o.seller || "Unknown";
-    const footprint = o.product?.carbonFootprint || o.carbonFootprint || 0;
-    map[seller] = (map[seller] || 0) + footprint * (o.quantity || 1);
-  });
-  return Object.entries(map)
-    .map(([name, totalCarbon]) => ({ name, totalCarbon: Number(totalCarbon.toFixed(2)) }))
-    .sort((a, b) => a.totalCarbon - b.totalCarbon);
-}, [currentMonthOrders]);
+    const map = {};
+    currentMonthOrders.forEach((o) => {
+      const seller = o.seller || "Unknown";
+      map[seller] = (map[seller] || 0) + (o.footprint || 0) * (o.quantity || 1);
+    });
+    return Object.entries(map)
+      .map(([name, totalCarbon]) => ({ name, totalCarbon: Number(totalCarbon.toFixed(2)) }))
+      .sort((a, b) => a.totalCarbon - b.totalCarbon); // eco-friendly first
+  }, [currentMonthOrders]);
 
   // Export CSV
   const downloadCSV = () => {
@@ -93,7 +85,7 @@ const categoryData = useMemo(() => {
         (o) =>
           `${o.id},${o.name || o.product?.name},${o.seller || "Unknown"},${o.type || o.product?.category},${
             o.quantity || 1
-          },${o.product?.carbonFootprint || o.carbonFootprint || 0},${o.date}`
+          },${o.footprint || o.product?.carbonFootprint || 0},${o.date}`
       )
       .join("\n");
     const csvContent = "data:text/csv;charset=utf-8," + headers + rows;

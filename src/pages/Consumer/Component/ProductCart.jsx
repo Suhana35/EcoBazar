@@ -1,12 +1,16 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FiTrash2, FiShoppingCart } from "react-icons/fi";
 import "../styles/ProductCart.css";
 import { useGlobal } from "../../../Global";
+import CheckOut from "./CheckOut";
 
-const ProductCart = () => {
+const ProductCart = ({ cartItems = [], setCartItems }) => {
   const navigate = useNavigate();
-  const { cartItems, setCartItems, checkout } = useGlobal();
+  const [showCheckout, setShowCheckout] = useState(false);
+  const [checkoutProduct, setCheckoutProduct] = useState(null);
+  const [checkoutQty, setCheckoutQty] = useState(1);
+
   // Adjust quantity
   const updateQuantity = (id, qty) => {
     setCartItems(prev =>
@@ -29,6 +33,33 @@ const ProductCart = () => {
     0
   );
   const ecoPoints = Math.round(totalCO2 * 0.1); // 10% of total carbon footprint as points
+
+  // Handle checkout popup
+  const handleCheckout = () => {
+    if (cartItems.length === 1) {
+      // Single product checkout
+      setCheckoutProduct(cartItems[0]);
+      setCheckoutQty(cartItems[0].quantity || 1);
+    } else {
+      // Multiple product summary
+      const multiProduct = {
+        name: "Multiple Items",
+        price: totalCost,
+        ecoScore: "-",
+        materialCO2: cartItems.reduce(
+          (sum, p) => sum + p.materialCO2 * (p.quantity || 1),
+          0
+        ),
+        shippingCO2: cartItems.reduce(
+          (sum, p) => sum + p.shippingCO2 * (p.quantity || 1),
+          0
+        ),
+      };
+      setCheckoutProduct(multiProduct);
+      setCheckoutQty(1);
+    }
+    setShowCheckout(true);
+  };
 
   return (
     <div className="cart-page-container">
@@ -67,7 +98,7 @@ const ProductCart = () => {
             <p><strong>Total Cost:</strong> ₹{totalCost.toFixed(2)}</p>
             <p><strong>Total Carbon Footprint:</strong> {totalCO2.toFixed(2)} kg CO₂</p>
             <p><strong>Eco Points Earned:</strong> {ecoPoints} 🌱</p>
-            <button className="checkout-btn" onClick={() => checkout(cartItems)}>
+            <button className="checkout-btn" onClick={handleCheckout}>
               <FiShoppingCart /> Checkout
             </button>
           </div>
@@ -77,6 +108,14 @@ const ProductCart = () => {
       <button onClick={() => navigate("/home")} className="continue-btn">
         Continue Shopping
       </button>
+
+      {/* Checkout Popup */}
+      <CheckOut
+        show={showCheckout}
+        product={checkoutProduct}
+        quantity={checkoutQty}
+        onClose={() => setShowCheckout(false)}
+      />
     </div>
   );
 };

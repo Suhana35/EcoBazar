@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 const CheckOut = ({ show, product, quantity, onClose }) => {
   const navigate = useNavigate();
 
-  if (!show || !product) return null; 
+  if (!show || !product) return null; // Don't render if not shown
 
   return (
     <div className="popup-overlay">

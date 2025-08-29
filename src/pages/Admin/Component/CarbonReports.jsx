@@ -1,73 +1,39 @@
-
-import React, { useState, useMemo } from "react";
+import React, { useState } from "react";
 import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
   PieChart, Pie, Cell, BarChart, Bar, ResponsiveContainer
 } from "recharts";
-import { useGlobal } from "../../../Global";
 import "../styles/CarbonReports.css";
 
 const COLORS = ["#4caf50", "#ff9800", "#f44336", "#2196f3", "#9c27b0"];
 
 const AdminCarbonReports = () => {
-  const { orders, products } = useGlobal();
+  // Dummy Data
+  const monthlyData = [
+    { month: "Jan", emissions: 40, saved: 10 },
+    { month: "Feb", emissions: 35, saved: 15 },
+    { month: "Mar", emissions: 50, saved: 20 },
+    { month: "Apr", emissions: 45, saved: 18 },
+    { month: "May", emissions: 38, saved: 22 },
+  ];
+
+  const categoryData = [
+    { name: "Clothing", value: 30 },
+    { name: "Electronics", value: 45 },
+    { name: "Home", value: 25 },
+    { name: "Beauty", value: 15 },
+    { name: "Others", value: 10 },
+  ];
+
+  const sellerData = [
+    { seller: "EcoStore", footprint: 5 },
+    { seller: "GreenMart", footprint: 10 },
+    { seller: "NatureWear", footprint: 7 },
+    { seller: "FreshLiving", footprint: 12 },
+    { seller: "EcoTrendz", footprint: 6 },
+  ];
+
   const [filter, setFilter] = useState("This Month");
-
-  // 🔹 Aggregate monthly emissions & saved CO₂
-  const monthlyData = useMemo(() => {
-    const months = Array.from({ length: 12 }, (_, i) => ({
-      month: new Date(0, i).toLocaleString("default", { month: "short" }),
-      emissions: 0,
-      saved: 0,
-    }));
-
-    orders.forEach(order => {
-      const date = new Date(order.date);
-      const m = date.getMonth();
-      const footprint = order.product?.carbonFootprint || 0;
-      const qty = order.quantity || 1;
-
-      months[m].emissions += footprint * qty;
-
-      // Example: pretend eco-products save 20% footprint
-      if (order.product?.ecoFriendly) {
-        months[m].saved += footprint * qty * 0.2;
-      }
-    });
-
-    return months;
-  }, [orders]);
-
-  // 🔹 Category-wise emissions
-  const categoryData = useMemo(() => {
-    const categoryTotals = {};
-    orders.forEach(order => {
-      const cat = order.category || "Others";
-      const footprint = order.product?.carbonFootprint || 0;
-      const qty = order.quantity || 1;
-      categoryTotals[cat] = (categoryTotals[cat] || 0) + footprint * qty;
-    });
-
-    return Object.entries(categoryTotals).map(([name, value]) => ({ name, value }));
-  }, [orders]);
-
-  // 🔹 Seller emissions (eco-friendliness = lower footprint)
-  const sellerData = useMemo(() => {
-    const sellerTotals = {};
-    orders.forEach(order => {
-      const seller = order.seller || "Unknown";
-      const footprint = order.product?.carbonFootprint || 0;
-      const qty = order.quantity || 1;
-      sellerTotals[seller] = (sellerTotals[seller] || 0) + footprint * qty;
-    });
-
-    return Object.entries(sellerTotals).map(([seller, footprint]) => ({ seller, footprint }));
-  }, [orders]);
-
-  // 🔹 Quick Stats
-  const totalEmissions = categoryData.reduce((sum, c) => sum + c.value, 0);
-  const topCategory = categoryData.reduce((a, b) => (a.value > b.value ? a : b), { name: "N/A", value: 0 });
-  const bestSeller = sellerData.reduce((a, b) => (a.footprint < b.footprint ? a : b), { seller: "N/A", footprint: Infinity });
 
   return (
     <div className="carbon-reports-container">
@@ -89,15 +55,19 @@ const AdminCarbonReports = () => {
       <div className="reports-stats">
         <div className="stat-card">
           <h3>Total Emissions</h3>
-          <p>{(totalEmissions / 1000).toFixed(2)} Tons</p>
+          <p>42.5 Tons</p>
+        </div>
+        <div className="stat-card">
+          <h3>CO₂ Saved vs Last Month</h3>
+          <p className="positive">+12%</p>
         </div>
         <div className="stat-card">
           <h3>Top Category</h3>
-          <p>{topCategory.name}</p>
+          <p>Electronics</p>
         </div>
         <div className="stat-card">
           <h3>Most Eco-Friendly Seller</h3>
-          <p>{bestSeller.seller} 🌱</p>
+          <p>EcoStore 🌱</p>
         </div>
       </div>
 

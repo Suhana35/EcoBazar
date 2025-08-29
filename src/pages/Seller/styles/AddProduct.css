@@ -1,4 +1,4 @@
-
+/* import "../styles/AddProduct.css"; */
 
 /* --- Base Styles & Layout --- */
 .add-product-container {
@@ -301,7 +301,7 @@ textarea {
   }
 }
 
-
+/* --- AddProduct.css (add these styles at the end) --- */
 
 /* --- New Category Form --- */
 .new-category-form {

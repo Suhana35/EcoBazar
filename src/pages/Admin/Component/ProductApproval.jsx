@@ -8,51 +8,138 @@
 
 import React, { useState, useMemo } from "react";
 import "../styles/ProductApproval.css";
-import { useGlobal } from "../../../Global";
 
 const ADMIN_NAME = "AdminUser";
 
-// Heuristic footprint suggestion
+const initialProducts = [
+  {
+    id: 1,
+    name: "FastFashion Tee",
+    seller: {
+      name: "GreenThreads",
+      rating: 4.2,
+      joinDate: "2023-09-02",
+      totalProducts: 34,
+      email: "hello@greenthreads.example",
+    },
+    category: "Clothing",
+    price: 14.99,
+    weightKg: 0.25,
+    footprint: 6.5, // kg CO2e
+    status: "Pending",
+    notes: "Imported cotton, short production cycle",
+    description:
+      "A soft tee made quickly to meet trend cycles. Single-use fashion grade cotton; consider sustainable alternatives.",
+    images: [
+      "https://via.placeholder.com/320x200?text=FastFashion+1",
+      "https://via.placeholder.com/320x200?text=FastFashion+2",
+    ],
+    audit: [],
+  },
+  {
+    id: 2,
+    name: "Reusable Water Bottle",
+    seller: {
+      name: "EcoHome",
+      rating: 4.9,
+      joinDate: "2022-03-11",
+      totalProducts: 68,
+      email: "support@ecohome.example",
+    },
+    category: "Home",
+    price: 24.5,
+    weightKg: 0.4,
+    footprint: 4.5,
+    status: "Pending",
+    notes: "Made with recycled steel",
+    description:
+      "Durable reusable bottle made from recycled steel. Low lifecycle footprint compared to single-use plastic bottles.",
+    images: ["https://via.placeholder.com/320x200?text=Bottle"],
+    audit: [],
+  },
+  {
+    id: 3,
+    name: "Imported Gadget",
+    seller: {
+      name: "SolarGadgets",
+      rating: 4.4,
+      joinDate: "2021-11-20",
+      totalProducts: 12,
+      email: "sales@solargadgets.example",
+    },
+    category: "Electronics",
+    price: 229.0,
+    weightKg: 2.1,
+    footprint: 59.0,
+    status: "Pending",
+    notes: "Long-distance shipping included",
+    description:
+      "Electronic device assembled overseas. Shipping contributes significantly to footprint.",
+    images: ["https://via.placeholder.com/320x200?text=Gadget"],
+    audit: [],
+  },
+  {
+    id: 4,
+    name: "Biodegradable Wrap",
+    seller: {
+      name: "BioPackaging",
+      rating: 4.6,
+      joinDate: "2024-01-08",
+      totalProducts: 9,
+      email: "contact@biopack.example",
+    },
+    category: "Home",
+    price: 4.99,
+    weightKg: 0.05,
+    footprint: 0.8,
+    status: "Pending",
+    notes: "Local production",
+    description: "A kitchen wrap made from certified biodegradable materials.",
+    images: ["https://via.placeholder.com/320x200?text=Wrap"],
+    audit: [],
+  },
+];
+
+// Simple heuristic to suggest footprint based on category and weight
 function suggestFootprint(category, weightKg) {
-  const factors = { Clothing: 25, Electronics: 300, Home: 40, Other: 50 };
+  // base factors per kg by category (kg CO2e per kg)
+  const factors = {
+    Clothing: 25, // clothing tends to be high due to fibres & processing
+    Electronics: 300,
+    Home: 40,
+    Other: 50,
+  };
   const factor = factors[category] ?? factors.Other;
+  // suggestion with a small multiplier and baseline
   const suggested = Math.max(0.1, (weightKg || 0.1) * factor * 0.1);
+  // Round to 1 decimal
   return Math.round(suggested * 10) / 10;
 }
 
 export default function ProductApproval() {
-  const { products, updateProduct } = useGlobal();
-
+  const [products, setProducts] = useState(initialProducts);
   const [query, setQuery] = useState("");
   const [sortBy, setSortBy] = useState("newest");
-  const [editing, setEditing] = useState(null);
-  const [viewing, setViewing] = useState(null);
+  const [editing, setEditing] = useState(null); // for footprint verify
+  const [viewing, setViewing] = useState(null); // product details modal
   const [page, setPage] = useState(1);
   const perPage = 6;
   const [filterCategory, setFilterCategory] = useState("All");
   const [filterStatus, setFilterStatus] = useState("Pending");
 
-  // categories
+  // derived lists
   const allCategories = useMemo(() => {
     const setCats = new Set(products.map((p) => p.category));
     return ["All", ...Array.from(setCats)];
   }, [products]);
 
-  // filtered products
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
-    let list = products.filter((p) =>
-      filterStatus === "All" ? true : p.status === filterStatus
-    );
-    if (filterCategory !== "All")
-      list = list.filter((p) => p.category === filterCategory);
-    if (q)
-      list = list.filter(
-        (p) =>
-          p.name.toLowerCase().includes(q) ||
-          p.seller?.name?.toLowerCase().includes(q)
-      );
+    let list = products.filter((p) => (filterStatus === "All" ? true : p.status === filterStatus));
+    if (filterCategory !== "All") list = list.filter((p) => p.category === filterCategory);
+    if (q) list = list.filter((p) => p.name.toLowerCase().includes(q) || p.seller.name.toLowerCase().includes(q));
 
+    // sorting
     if (sortBy === "footprint-asc") list.sort((a, b) => a.footprint - b.footprint);
     else if (sortBy === "footprint-desc") list.sort((a, b) => b.footprint - a.footprint);
     else if (sortBy === "price-asc") list.sort((a, b) => a.price - b.price);
@@ -65,22 +152,20 @@ export default function ProductApproval() {
   const totalPages = Math.max(1, Math.ceil(filtered.length / perPage));
   const pageItems = filtered.slice((page - 1) * perPage, page * perPage);
 
-  // stats
+  // Activity Insights
   const stats = useMemo(() => {
     const pending = products.filter((p) => p.status === "Pending").length;
     const approved = products.filter((p) => p.status === "Approved").length;
-    const avgFootprintAll = products.length
-      ? products.reduce((s, p) => s + (p.footprint || 0), 0) / products.length
-      : 0;
+    const avgFootprintAll = products.length ? (products.reduce((s, p) => s + (p.footprint || 0), 0) / products.length) : 0;
 
+    // this week approvals - check audit entries in last 7 days
     const oneWeekAgo = Date.now() - 7 * 24 * 60 * 60 * 1000;
     let thisWeekApprovals = 0;
-    products.forEach((p) =>
+    products.forEach((p) => {
       (p.audit || []).forEach((a) => {
-        if (a.action === "Approved" && new Date(a.ts).getTime() >= oneWeekAgo)
-          thisWeekApprovals++;
-      })
-    );
+        if (a.action === "Approved" && new Date(a.ts).getTime() >= oneWeekAgo) thisWeekApprovals++;
+      });
+    });
 
     return {
       pending,
@@ -90,26 +175,22 @@ export default function ProductApproval() {
     };
   }, [products]);
 
-  // --- actions ---
-  const pushAudit = (product, action, note = "") => {
+  const pushAudit = (prodId, action, note = "") => {
     const entry = { by: ADMIN_NAME, action, ts: new Date().toISOString(), note };
-    updateProduct({
-      ...product,
-      audit: [...(product.audit || []), entry],
-    });
+    setProducts((prev) => prev.map((p) => (p.id === prodId ? { ...p, audit: [...(p.audit || []), entry] } : p)));
   };
 
-  const approveProduct = (p) => {
-    updateProduct({ ...p, status: "Approved" });
-    pushAudit(p, "Approved");
+  const approveProduct = (id) => {
+    setProducts((prev) => prev.map((p) => (p.id === id ? { ...p, status: "Approved" } : p)));
+    pushAudit(id, "Approved");
   };
-
-  const rejectProduct = (p, reason = "") => {
-    updateProduct({ ...p, status: "Rejected" });
-    pushAudit(p, "Rejected", reason);
+  const rejectProduct = (id, reason = "") => {
+    setProducts((prev) => prev.map((p) => (p.id === id ? { ...p, status: "Rejected" } : p)));
+    pushAudit(id, "Rejected", reason);
   };
 
   const openVerify = (product) => {
+    // include suggestion
     const suggested = suggestFootprint(product.category, product.weightKg);
     setEditing({ ...product, suggested });
   };
@@ -121,8 +202,8 @@ export default function ProductApproval() {
       alert("Please enter a valid non-negative number for footprint.");
       return;
     }
-    updateProduct({ ...editing, footprint: val });
-    pushAudit(editing, "Footprint Verified", `set to ${val}kg`);
+    setProducts((prev) => prev.map((p) => (p.id === editing.id ? { ...p, footprint: val } : p)));
+    pushAudit(editing.id, "Footprint Verified", `set to ${val}kg`);
     setEditing(null);
   };
 

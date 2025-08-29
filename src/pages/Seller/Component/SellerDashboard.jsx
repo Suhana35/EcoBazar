@@ -8,8 +8,10 @@ import {
 import { FiTrendingUp, FiPackage, FiFeather, FiZap, FiFilter, FiSearch } from "react-icons/fi";
 
 import "../styles/SellerDashboard.css";
-import { useGlobal } from "../../../Global";
 
+// -----------------------------
+// Mock Data
+// -----------------------------
 const salesFootprintMonthly = [
   { month: "Jan", sales: 120000, footprint: 420 },
   { month: "Feb", sales: 98000, footprint: 400 },
@@ -34,6 +36,9 @@ const productCatalog = [
   { id: 6, name: "Compostable Mailer", category: "Packaging", unitsSold: 2000, revenue: 60000, ecoScore: 95, footprintPerUnit: 0.05 },
 ];
 
+// -----------------------------
+// UI Components
+// -----------------------------
 function StatCard({ title, value, sub, icon: Icon }) {
   return (
     <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.35 }} className="stat-card">
@@ -68,9 +73,10 @@ function EcoTip({ text }) {
   );
 }
 
-
+// -----------------------------
+// Dashboard
+// -----------------------------
 export default function SellerDashboard() {
-  const { products } = useGlobal();
   const navigate = useNavigate();
   const [query, setQuery] = useState("");
   const [onlyEco, setOnlyEco] = useState(true);
@@ -78,7 +84,7 @@ export default function SellerDashboard() {
 
   // Filtered & sorted products
   const filteredProducts = useMemo(() => {
-    const list = products.filter((p) => {
+    const list = productCatalog.filter((p) => {
       if (onlyEco && p.ecoScore < 80) return false;
       if (!query) return true;
       return (
@@ -87,21 +93,12 @@ export default function SellerDashboard() {
       );
     });
     return [...list].sort((a, b) => b.unitsSold - a.unitsSold);
-  }, [products, onlyEco, query]);
+  }, [onlyEco, query]);
 
   // Aggregated stats
-  const totalRevenue = useMemo(
-    () => products.reduce((acc, p) => acc + (p.revenue || 0), 0),
-    [products]
-  );
-  const totalProducts = useMemo(() => products.length, [products]);
-  const avgFootprint = useMemo(
-    () =>
-      (products.reduce((acc, p) => acc + (p.footprintPerUnit || 0), 0) /
-        (products.length || 1)).toFixed(2),
-    [products]
-  );
-
+  const totalRevenue = useMemo(() => productCatalog.reduce((acc, p) => acc + p.revenue, 0), []);
+  const totalProducts = useMemo(() => productCatalog.length, []);
+  const avgFootprint = useMemo(() => (productCatalog.reduce((acc, p) => acc + p.footprintPerUnit, 0) / productCatalog.length).toFixed(2), []);
 
   // Range data for charts
   const rangeData = useMemo(() => {
@@ -121,7 +118,7 @@ export default function SellerDashboard() {
   // Pie chart data
   const footprintByCategory = useMemo(() => {
     const map = new Map();
-    products.forEach((p) => {
+    productCatalog.forEach((p) => {
       const current = map.get(p.category) || 0;
       map.set(p.category, current + p.footprintPerUnit * p.unitsSold);
     });
@@ -237,9 +234,7 @@ export default function SellerDashboard() {
                       <td>{p.name}</td>
                       <td>{p.category}</td>
                       <td>{p.unitsSold.toLocaleString()}</td>
-                      <td>$ {(p.price || 0).toFixed(2)}</td>
-                      <td>₹{(p.revenue || 0).toLocaleString()}</td>
-
+                      <td>₹{p.revenue.toLocaleString()}</td>
                       <td>{p.ecoScore}</td>
                     </tr>
                   ))}

@@ -4,19 +4,17 @@ import { FiSearch, FiStar, FiShoppingCart } from "react-icons/fi";
 import "../styles/ProductCatalog.css";
 import { FaHome } from "react-icons/fa";
 import defaultProducts from "../uitils/dummy";
-import { useGlobal } from "../../../Global";
 
-const Home = ({ products = []}) => {
-  const { addToCart } = useGlobal();
+const Home = ({ products = [], addToCart }) => {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("");
   const [sortBy, setSortBy] = useState("");
 
- 
+  // Default demo products with carbon footprint + eco score
 
 
-  const allProducts = [...defaultProducts, ...products];
+  const allProducts = [ ...defaultProducts,...products];
 
   // Filter products
   let filteredProducts = allProducts.filter((p) => {
@@ -36,7 +34,12 @@ const Home = ({ products = []}) => {
     filteredProducts.sort((a, b) => a.footprint - b.footprint);
   }
 
-  
+  // Add to Cart action
+  // const addToCart = (id) => {
+  //   navigate("/cart")
+  //   // alert(`Product ${id} added to cart!`);
+  //   // Later: navigate("/cart") or update global cart context
+  // };
 
   return (
     <div className="catalog-container">

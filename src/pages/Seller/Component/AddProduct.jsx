@@ -2,8 +2,6 @@ import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { FiUploadCloud, FiX } from "react-icons/fi";
 import "../styles/AddProduct.css";
-import { useGlobal } from "../../../Global";
-
 
 const INITIAL_CATEGORIES = ["Clothing", "Electronics", "Food"];
 const INITIAL_MATERIALS = ["Cotton", "Plastic", "Metal"];
@@ -17,7 +15,6 @@ const EMISSION_FACTORS = {
 };
 
 const AddProduct = ({ setProducts }) => {
-  const { addProduct } = useGlobal();
   const [productData, setProductData] = useState({
     name: "",
     price: "",
@@ -67,31 +64,21 @@ const AddProduct = ({ setProducts }) => {
 
   // --- Form submission ---
   const handleSave = () => {
-  const finalProduct = {
-  id: Date.now(),
-  name: productData.name || "Untitled Product",
-  price: parseFloat(productData.price) || 0,
-  quantity: parseInt(productData.quantity) || 0,
-  category: productData.category || "General",
-  material: productData.material || "Unknown",
-  weight: productData.weight || "0",
-  shippingMode: productData.shippingMode,
-  carbonFootprint: productData.carbonFootprint || "0 kg CO₂",
-  image: productData.image || "/default-product.png",
-  rating: 0,
-  votes: 0,
-  revenue: 0,        
-  unitsSold: 0,      
-  ecoScore: 0,       
-  footprintPerUnit: 0, 
-};
-
-
-
-  addProduct(finalProduct);
-  navigate("/selProducts");
-};
-
+    const finalProduct = {
+      id: Date.now(),
+      name: productData.name || "Untitled Product",
+      price: parseFloat(productData.price) || 0,
+      quantity: parseInt(productData.quantity) || 0,
+      category: productData.category || "General",
+      material: productData.material || "Unknown",
+      weight: productData.weight || "0",
+      shippingMode: productData.shippingMode,
+      carbonFootprint: productData.carbonFootprint,
+      image: productData.image || "https://via.placeholder.com/100",
+    };
+    setProducts((prev) => [...prev, finalProduct]);
+    navigate("/selProducts");
+  };
 
   return (
     <div className="add-product-container">

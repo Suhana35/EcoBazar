@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "../styles/SalesOrders.css";
-import { useGlobal } from "../../../Global";
 
-
+// Sample data for orders
 const defaultOrders = [
   {
     id: 1,
@@ -24,15 +23,13 @@ const defaultOrders = [
   },
 ];
 
-const SalesOrders = ({}) => {
-    const { orders } = useGlobal();
+const SalesOrders = ({ ordersProp = [] }) => {
+    const orders = ordersProp;
+//   const [orders, setOrders] = useState([...defaultOrders, ...ordersProp]);
 
-  const calculateRevenue = (order) =>
-  ((order.product?.price || 0) * (order.quantity || 0)).toFixed(2);
-
-const calculateCarbon = (order) =>
-  ((order.product?.carbonFootprint || 0) * (order.quantity || 0)).toFixed(2);
-
+  // Optionally calculate total revenue and carbon footprint per order
+  const calculateRevenue = (order) => (order.product.price * order.quantity).toFixed(2);
+  const calculateCarbon = (order) => (order.product.carbonFootprint * order.quantity).toFixed(2);
 
   return (
     <div className="sales-orders-container">
@@ -59,17 +56,17 @@ const calculateCarbon = (order) =>
                   <td>{order.id}</td>
                   <td>
                     <div className="product-info">
-                      <div className="product-name">{order.product?.name || "Unknown"}</div>
-                      <div className="product-price">$ {(order.product?.price || 0).toFixed(2)}</div>
+                      <div className="product-name">{order.product.name}</div>
+                      <div className="product-price">$ {order.product.price.toFixed(2)}</div>
                     </div>
                   </td>
                   <td>
                     <div className="buyer-info">
-                      <div className="buyer-name">{order.buyer?.name || "Anonymous"}</div>
-                      <div className="buyer-email">{order.buyer?.email || "-"}</div>
+                      <div className="buyer-name">{order.buyer.name}</div>
+                      <div className="buyer-email">{order.buyer.email}</div>
                     </div>
                   </td>
-                  <td>{order.quantity || 0}</td>
+                  <td>{order.quantity}</td>
                   <td>{calculateRevenue(order)}</td>
                   <td>{calculateCarbon(order)}</td>
                 </tr>

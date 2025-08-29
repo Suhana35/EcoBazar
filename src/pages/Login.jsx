@@ -1,13 +1,9 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useGlobal } from "../Global";
 import "../styles/Form.css";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 function Login() {
-  const { loginUser } = useGlobal(); 
-  const navigate = useNavigate();
-
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -16,6 +12,8 @@ function Login() {
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -39,21 +37,27 @@ function Login() {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (validate()) {
-      setLoading(true);
       setTimeout(() => {
-        const user = loginUser(formData.email, formData.password); 
-        if (user) {
-          setLoading(false);
+        const users = JSON.parse(localStorage.getItem("users")) || [];
+        const user = users.find(u => u.email === formData.email && u.password === formData.password);
 
-          
-          if (user.role === "consumer") navigate("/home");
-          else if (user.role === "seller") navigate("/seller");
-          else if (user.role === "admin") navigate("/admin");
+        if (user) {
+          console.log("Logged In User:", user);
+          setLoading(false);
+          // Redirect based on role
+          if (user.role === "consumer") {
+            navigate("/home");
+          } else if (user.role === "seller") {
+            navigate("/seller");
+          }
+          else if (user.role === "admin") {
+            navigate("/admin");
+          }
         } else {
           setLoading(false);
           setErrors({ general: "Invalid email or password." });
         }
-      }, 1000);
+      }, 1500);
     }
   };
 
@@ -89,8 +93,6 @@ function Login() {
             </span>
           </div>
           {errors.password && <p className="error">{errors.password}</p>}
-
-          {errors.general && <p className="error">{errors.general}</p>}
 
           <button type="submit" disabled={loading}>
             {loading ? "Logging in..." : "Login"}

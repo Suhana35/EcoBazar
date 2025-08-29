@@ -4,10 +4,8 @@ import { FiShoppingCart, FiStar } from "react-icons/fi";
 import "../styles/ProductDetails.css";
 import defaultProducts from "../uitils/dummy";
 import CheckOut from "./CheckOut";
-import { useGlobal } from "../../../Global";
 
-const ProductDetails = ({ products = [] }) => {
-   const { addOrder } = useGlobal();
+const ProductDetails = ({ addOrder, products = [] }) => {
   const { productId } = useParams();
   const navigate = useNavigate();
   const [showPopup, setShowPopup] = useState(false);

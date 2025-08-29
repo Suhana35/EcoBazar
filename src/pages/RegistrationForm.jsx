@@ -1,13 +1,9 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useGlobal } from "../Global";  
 import "../styles/Form.css";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 function RegistrationForm() {
-  const { registerUser } = useGlobal(); 
-  const navigate = useNavigate();
-
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -17,8 +13,11 @@ function RegistrationForm() {
   });
 
   const [errors, setErrors] = useState({});
+  const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -27,24 +26,22 @@ function RegistrationForm() {
 
   const validate = () => {
     let tempErrors = {};
-
-    if (!formData.name) tempErrors.name = "Name is required.";
+    if (!formData.name) tempErrors.name = "Full Name is required.";
     if (!formData.email) {
-      tempErrors.email = "Email is required.";
+      tempErrors.email = "Email Address is required.";
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      tempErrors.email = "Invalid email format.";
+      tempErrors.email = "Email Address is invalid.";
     }
     if (!formData.password) {
       tempErrors.password = "Password is required.";
     } else if (formData.password.length < 6) {
-      tempErrors.password = "Password must be at least 6 characters.";
+      tempErrors.password = "Password must be at least 6 characters long.";
     }
     if (!formData.confirmPassword) {
-      tempErrors.confirmPassword = "Confirm your password.";
-    } else if (formData.confirmPassword !== formData.password) {
+      tempErrors.confirmPassword = "Confirm Password is required.";
+    } else if (formData.password !== formData.confirmPassword) {
       tempErrors.confirmPassword = "Passwords do not match.";
     }
-
     setErrors(tempErrors);
     return Object.keys(tempErrors).length === 0;
   };
@@ -52,25 +49,22 @@ function RegistrationForm() {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (validate()) {
-      const success = registerUser({
-        name: formData.name,
-        email: formData.email,
-        password: formData.password,
-        role: formData.role,
-      });
-
-      if (success) {
-        navigate("/login"); 
-      } else {
-        setErrors({ email: "User with this email already exists." });
-      }
+      setLoading(true);
+      // Simulate API call
+      setTimeout(() => {
+        console.log("Registered User:", formData);
+        const users = JSON.parse(localStorage.getItem("users")) || [];
+        localStorage.setItem("users", JSON.stringify([...users, formData]));
+        setLoading(false);
+        navigate("/login");
+      }, 2000);
     }
   };
 
   return (
     <div className="form">
       <div className="form-container">
-        <h2>Register</h2>
+        <h2>Registration</h2>
         <form onSubmit={handleSubmit}>
           <div className="form-group">
             <input
@@ -135,6 +129,7 @@ function RegistrationForm() {
               name="role"
               value={formData.role}
               onChange={handleChange}
+              className="select-input"
             >
               <option value="consumer">Consumer</option>
               <option value="seller">Seller</option>
@@ -142,13 +137,15 @@ function RegistrationForm() {
             </select>
           </div>
 
-          <button type="submit">Register</button>
-        </form>
+          <button type="submit" disabled={loading}>
+            {loading ? "Registering..." : "Register"}
+          </button>
 
-        <p className="switch-form">
-          Already have an account?{" "}
-          <span onClick={() => navigate("/login")}>Login</span>
-        </p>
+          <p className="switch-form">
+            Already have an account?{" "}
+            <span onClick={() => navigate("/login")}>Login</span>
+          </p>
+        </form>
       </div>
     </div>
   );

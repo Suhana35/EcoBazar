@@ -1,4 +1,4 @@
-
+/* import "../styles/ProductCatalog.css"; */
 /* --- Base Container & Font --- */
 .catalog-container {
   max-width: 1200px;
@@ -8,6 +8,13 @@
   font-family: 'Poppins', sans-serif;
   color: #333;
 }
+/* Make Actions column narrower and centered */
+/* .catalog-table th:last-child,
+.catalog-table td.product-actions {
+  width: 120px;   
+  text-align: center;
+  white-space: nowrap;
+} */
 
 
 
@@ -270,7 +277,8 @@
   background-color: #ef4444;
 }
 
-
+/* Actions Buttons */
+/* Actions column styling */
 .product-actions {
   display: flex;
   

@@ -1,13 +1,15 @@
 /* --- Google Font --- */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
 
+/* --- Body & Background --- */
+
 
 /* --- Catalog Container --- */
 .catalog-container {
   max-width: 1200px;
   margin: 2rem auto;
   padding: 2rem;
-  background-color: rgba(255, 255, 255, 0.85); 
+  background-color: rgba(255, 255, 255, 0.85); /* frosted glass effect */
   border-radius: 15px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
   backdrop-filter: blur(10px);
@@ -49,7 +51,7 @@
 .search-wrapper {
   display: flex;
   align-items: center;
- 
+  /* border: 1px solid #ccc; */
   border-radius: 25px;
   padding: 6px 8px;
   background-color: #fff;
@@ -60,14 +62,17 @@
   outline: none;
   font-size: 14px;
   width: 500px;
-
+  /* padding-right: 0px; */
+  /* left:8px; */
 
 }
 
 .search-icon {
   color: #764ba2; /* matches form accent color */
   padding-bottom: 15px;
- 
+  /* right:40px; */
+  /* padding: 5px; */
+  /* margin-right: 1px; */
 }
 
 .filter-options select {
@@ -188,7 +193,7 @@
 
 .star-icon {
   font-size: 16px;
-  color: #ffc107; 
+  color: #ffc107; /* golden star */
 }
 
 

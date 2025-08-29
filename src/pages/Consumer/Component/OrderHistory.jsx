@@ -1,10 +1,9 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+// import "./OrderHistory.css"; // make sure to create this css file
 import "../styles/OrderHistory.css";
-import { useGlobal } from "../../../Global";
 
-const OrderHistory = () => {
-  const { orders } = useGlobal();
+const OrderHistory = ({ orders = [] }) => {
   const navigate = useNavigate();
 
   const goToDetails = (id) => {
@@ -56,7 +55,7 @@ const OrderHistory = () => {
                 <button
                   className="details-btn"
                   onClick={(e) => {
-                    e.stopPropagation(); 
+                    e.stopPropagation(); // prevent triggering card click twice
                     goToDetails(order.id);
                   }}
                 >
