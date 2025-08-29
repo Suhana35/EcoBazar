@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { FiSearch, FiStar, FiShoppingCart } from "react-icons/fi";
 import "../styles/ProductCatalog.css";
 import { FaHome } from "react-icons/fa";
-import defaultProducts from "../uitils/dummy";
 
 const Home = ({ products = [], addToCart }) => {
   const navigate = useNavigate();
@@ -14,7 +13,7 @@ const Home = ({ products = [], addToCart }) => {
   // Default demo products with carbon footprint + eco score
 
 
-  const allProducts = [ ...defaultProducts,...products];
+  const allProducts = [...products];
 
   // Filter products
   let filteredProducts = allProducts.filter((p) => {

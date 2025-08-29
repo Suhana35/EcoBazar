@@ -5,7 +5,7 @@ import "../styles/ProductCart.css";
 import { useGlobal } from "../../../Global";
 import CheckOut from "./CheckOut";
 
-const ProductCart = ({ cartItems = [], setCartItems }) => {
+const ProductCart = ({ cartItems = [], setCartItems,addOrder, products = [] }) => {
   const navigate = useNavigate();
   const [showCheckout, setShowCheckout] = useState(false);
   const [checkoutProduct, setCheckoutProduct] = useState(null);
@@ -36,6 +36,13 @@ const ProductCart = ({ cartItems = [], setCartItems }) => {
 
   // Handle checkout popup
   const handleCheckout = () => {
+    if (cartItems.length === 0) return;
+
+  // Add each cart item to orders
+  cartItems.forEach(item => {
+    const orderWithDate = { ...item, date: new Date().toISOString() };
+    addOrder(orderWithDate); // add to global orders
+  });
     if (cartItems.length === 1) {
       // Single product checkout
       setCheckoutProduct(cartItems[0]);
@@ -56,6 +63,7 @@ const ProductCart = ({ cartItems = [], setCartItems }) => {
         ),
       };
       setCheckoutProduct(multiProduct);
+
       setCheckoutQty(1);
     }
     setShowCheckout(true);

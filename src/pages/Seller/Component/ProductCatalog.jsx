@@ -12,16 +12,54 @@ const defaultProducts = [
 
 const ProductCatalog = ({ products: productsProp = [] }) => {
   const navigate = useNavigate();
-  const [products, setProducts] = useState([...defaultProducts, ...productsProp]);
+  const [products, setProducts] = useState([...defaultProducts]);
   const [searchTerm, setSearchTerm] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
   const [selected, setSelected] = useState([]);
 
   // Sync products when prop changes
-  useEffect(() => {
-    setProducts([...defaultProducts, ...productsProp]);
-  }, [productsProp]);
+  // const [products, setProducts] = useState([...defaultProducts]);
+
+useEffect(() => {
+  const merged = [...defaultProducts];
+  // find the max ID in current products
+  let nextId = Math.max(...merged.map(p => p.id)) + 1;
+
+  productsProp.forEach((p) => {
+    merged.push({ ...p, id: nextId });
+    nextId++;
+  });
+
+  setProducts(merged);
+}, [productsProp]);
+
+//   useEffect(() => {
+//   const merged = [...defaultProducts];
+//   // find the max ID in defaultProducts
+//   console.log(merged);
+//   let nextId = Math.max(...defaultProducts.map(p => p.id)) + 1;
+//     console.log(nextId)
+//   productsProp.forEach((p) => {
+//     console.log(nextId);
+//     merged.push({ ...p, id: nextId });
+//     nextId++;
+//   });
+// console.log(merged);
+//   setProducts(merged);
+// }, [productsProp]);
+
+// useEffect(() => {
+//   const merged = [...defaultProducts];
+//   productsProp.forEach((p) => {
+//     if (!merged.some((dp) => dp.id === p.id)) merged.push(p);
+//   });
+//   setProducts(merged);
+// }, [productsProp]);
+
+  // useEffect(() => {
+  //   setProducts([...defaultProducts, ...productsProp]);
+  // }, [productsProp]);
 
   const getStockStatus = (inventory) => {
     if (inventory > 10) return { text: "In Stock", className: "in-stock" };

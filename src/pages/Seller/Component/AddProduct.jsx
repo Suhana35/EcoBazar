@@ -14,7 +14,7 @@ const EMISSION_FACTORS = {
   Sea: 0.1,
 };
 
-const AddProduct = ({ setProducts }) => {
+const AddProduct = ({products=[], setProducts }) => {
   const [productData, setProductData] = useState({
     name: "",
     price: "",
@@ -65,7 +65,7 @@ const AddProduct = ({ setProducts }) => {
   // --- Form submission ---
   const handleSave = () => {
     const finalProduct = {
-      id: Date.now(),
+      id:  Date.now() + Math.floor(Math.random() * 100),
       name: productData.name || "Untitled Product",
       price: parseFloat(productData.price) || 0,
       quantity: parseInt(productData.quantity) || 0,
@@ -77,6 +77,7 @@ const AddProduct = ({ setProducts }) => {
       image: productData.image || "https://via.placeholder.com/100",
     };
     setProducts((prev) => [...prev, finalProduct]);
+    console.log(products);
     navigate("/selProducts");
   };
 
