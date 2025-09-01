@@ -1,64 +1,55 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/Form.css";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { useGlobal } from "../Global";
 
 function Login() {
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-  });
+  const { loginUser, currentUser, users } = useGlobal();
+  const navigate = useNavigate();
 
+  const [formData, setFormData] = useState({ email: "", password: "" });
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
-  const navigate = useNavigate();
+  // Redirect if already logged in
+  useEffect(() => {
+    if (currentUser) {
+      if (currentUser.role === "consumer") navigate("/home");
+      else if (currentUser.role === "seller") navigate("/seller");
+      else if (currentUser.role === "admin") navigate("/admin");
+    }
+  }, [currentUser, navigate]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    setFormData({ ...formData, [name]: value.trim() });
+    if (errors[name] || errors.general) setErrors((prev) => ({ ...prev, [name]: "", general: "" }));
   };
 
   const validate = () => {
     let tempErrors = {};
-    if (!formData.email) {
-      tempErrors.email = "Email Address is required.";
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      tempErrors.email = "Email Address is invalid.";
-    }
-    if (!formData.password) {
-      tempErrors.password = "Password is required.";
-    }
+    if (!formData.email) tempErrors.email = "Email Address is required.";
+    else if (!/\S+@\S+\.\S+/.test(formData.email)) tempErrors.email = "Email Address is invalid.";
+
+    if (!formData.password) tempErrors.password = "Password is required.";
+
     setErrors(tempErrors);
     return Object.keys(tempErrors).length === 0;
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (validate()) {
-      setTimeout(() => {
-        const users = JSON.parse(localStorage.getItem("users")) || [];
-        const user = users.find(u => u.email === formData.email && u.password === formData.password);
+    if (!validate()) return;
 
-        if (user) {
-          console.log("Logged In User:", user);
-          setLoading(false);
-          // Redirect based on role
-          if (user.role === "consumer") {
-            navigate("/home");
-          } else if (user.role === "seller") {
-            navigate("/seller");
-          }
-          else if (user.role === "admin") {
-            navigate("/admin");
-          }
-        } else {
-          setLoading(false);
-          setErrors({ general: "Invalid email or password." });
-        }
-      }, 1500);
-    }
+    setLoading(true);
+    setTimeout(() => {
+      const success = loginUser(formData.email, formData.password);
+
+      if (!success) setErrors({ general: "Invalid email or password." });
+      setLoading(false);
+    }, 1000);
   };
 
   return (
@@ -91,8 +82,10 @@ function Login() {
             >
               {showPassword ? <FaEyeSlash /> : <FaEye />}
             </span>
+            {errors.password && <p className="error">{errors.password}</p>}
           </div>
-          {errors.password && <p className="error">{errors.password}</p>}
+
+          {errors.general && <p className="error">{errors.general}</p>}
 
           <button type="submit" disabled={loading}>
             {loading ? "Logging in..." : "Login"}
@@ -100,8 +93,7 @@ function Login() {
         </form>
 
         <p className="switch-form">
-          Don’t have an account?{" "}
-          <span onClick={() => navigate("/")}>Register</span>
+          Don’t have an account? <span onClick={() => navigate("/")}>Register</span>
         </p>
       </div>
     </div>

@@ -117,11 +117,6 @@ function BarChart({ items, labelKey = "name", valueKey = "footprint", maxWidth =
 export default function AdminDashboard({ stats = sampleStats }) {
   return (
     <div className="admin-dashboard">
-      <nav className="admin-nav">
-        <Link to="/userManagement" className="nav-link">User Management</Link>
-        <Link to="/productApproval" className="nav-link">Product Approval</Link>
-        <Link to="/adminReports" className="nav-link">Carbon Reports</Link>
-      </nav>
       <header className="dashboard-header">
         <h1>Admin Dashboard</h1>
         <p className="sub">Overview of platform carbon stats and listings</p>

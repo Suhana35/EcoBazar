@@ -1,6 +1,5 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-// import "./OrderHistory.css"; // make sure to create this css file
 import "../styles/OrderHistory.css";
 
 const OrderHistory = ({ orders = [] }) => {
@@ -12,7 +11,7 @@ const OrderHistory = ({ orders = [] }) => {
 
   return (
     <div className="order-history-container">
-        <button
+      <button
         className="back-btn"
         onClick={() => navigate(-1)}
         style={{ marginBottom: "15px" }}
@@ -34,8 +33,19 @@ const OrderHistory = ({ orders = [] }) => {
               <img src={order.image} alt={order.name} className="order-img" />
               <div className="order-info">
                 <h3>{order.name}</h3>
-                <p><strong>Price:</strong> ₹{order.price.toFixed(2)}</p>
-                <p><strong>Eco Score:</strong> {order.ecoScore} / 5</p>
+                <p>
+                  <strong>Price:</strong> ₹{order.price.toFixed(2)}
+                </p>
+                <p>
+                  <strong>Quantity:</strong> {order.quantity || 1}
+                </p>
+                <p>
+                  <strong>Total Price:</strong>{" "}
+                  ₹{(order.price * (order.quantity || 1)).toFixed(2)}
+                </p>
+                <p>
+                  <strong>Eco Score:</strong> {order.ecoScore} / 5
+                </p>
                 <p>
                   <strong>Carbon Footprint:</strong>{" "}
                   {order.materialCO2 + order.shippingCO2} kg CO₂
@@ -55,7 +65,7 @@ const OrderHistory = ({ orders = [] }) => {
                 <button
                   className="details-btn"
                   onClick={(e) => {
-                    e.stopPropagation(); // prevent triggering card click twice
+                    e.stopPropagation();
                     goToDetails(order.id);
                   }}
                 >

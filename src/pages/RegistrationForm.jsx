@@ -2,8 +2,10 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/Form.css";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { useGlobal } from "../Global";
 
 function RegistrationForm() {
+  const { registerUser } = useGlobal(); // ✅ use context
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -50,14 +52,15 @@ function RegistrationForm() {
     e.preventDefault();
     if (validate()) {
       setLoading(true);
-      // Simulate API call
       setTimeout(() => {
         console.log("Registered User:", formData);
-        const users = JSON.parse(localStorage.getItem("users")) || [];
-        localStorage.setItem("users", JSON.stringify([...users, formData]));
+
+        // ✅ Save user into Global Context
+        registerUser(formData);
+
         setLoading(false);
         navigate("/login");
-      }, 2000);
+      }, 1000);
     }
   };
 

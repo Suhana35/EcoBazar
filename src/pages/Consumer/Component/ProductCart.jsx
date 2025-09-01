@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FiTrash2, FiShoppingCart } from "react-icons/fi";
@@ -5,7 +6,7 @@ import "../styles/ProductCart.css";
 import { useGlobal } from "../../../Global";
 import CheckOut from "./CheckOut";
 
-const ProductCart = ({ cartItems = [], setCartItems,addOrder, products = [] }) => {
+const ProductCart = ({ cartItems = [], setCartItems, addOrder, products = [] }) => {
   const navigate = useNavigate();
   const [showCheckout, setShowCheckout] = useState(false);
   const [checkoutProduct, setCheckoutProduct] = useState(null);
@@ -35,39 +36,80 @@ const ProductCart = ({ cartItems = [], setCartItems,addOrder, products = [] }) =
   const ecoPoints = Math.round(totalCO2 * 0.1); // 10% of total carbon footprint as points
 
   // Handle checkout popup
+  // Handle checkout popup
+
+
+
+
+
+  // const handleCheckout = () => {
+  //   if (cartItems.length === 0) return;
+
+  //   // Add each cart item to orders
+  //   cartItems.forEach(item => {
+  //     const orderWithDate = { ...item, date: new Date().toISOString() };
+  //     addOrder(orderWithDate); // add to global orders
+  //   });
+  //   if (cartItems.length === 1) {
+  //     // Single product checkout
+  //     setCheckoutProduct(cartItems[0]);
+  //     setCheckoutQty(cartItems[0].quantity || 1);
+  //   } else {
+  //     // Multiple product summary
+  //     const multiProduct = {
+  //       name: "Multiple Items",
+  //       price: totalCost,
+  //       ecoScore: "-",
+  //       materialCO2: cartItems.reduce(
+  //         (sum, p) => sum + p.materialCO2 * (p.quantity || 1),
+  //         0
+  //       ),
+  //       shippingCO2: cartItems.reduce(
+  //         (sum, p) => sum + p.shippingCO2 * (p.quantity || 1),
+  //         0
+  //       ),
+  //     };
+  //     setCheckoutProduct(multiProduct);
+
+  //     setCheckoutQty(1);
+  //   }
+  //   setShowCheckout(true);
+  // };
+
   const handleCheckout = () => {
-    if (cartItems.length === 0) return;
+  if (cartItems.length === 0) return;
+    cartItems.forEach(item => {
+      const orderWithDate = { ...item, date: new Date().toISOString() };
+      addOrder(orderWithDate); // add to global orders
+      removeProduct(item.id);
+    });
+  if (cartItems.length === 1) {
+    // Single product checkout
+    setCheckoutProduct(cartItems[0]);
+    setCheckoutQty(cartItems[0].quantity || 1);
+  } else {
+    // Multiple product summary
+    const multiProduct = {
+      name: "Multiple Items",
+      price: totalCost,
+      ecoScore: "-",
+      materialCO2: cartItems.reduce(
+        (sum, p) => sum + p.materialCO2 * (p.quantity || 1),
+        0
+      ),
+      shippingCO2: cartItems.reduce(
+        (sum, p) => sum + p.shippingCO2 * (p.quantity || 1),
+        0
+      ),
+    };
+    // setCartItems([]); 
+    setCheckoutProduct(multiProduct);
+    setCheckoutQty(1);
+  }
 
-  // Add each cart item to orders
-  cartItems.forEach(item => {
-    const orderWithDate = { ...item, date: new Date().toISOString() };
-    addOrder(orderWithDate); // add to global orders
-  });
-    if (cartItems.length === 1) {
-      // Single product checkout
-      setCheckoutProduct(cartItems[0]);
-      setCheckoutQty(cartItems[0].quantity || 1);
-    } else {
-      // Multiple product summary
-      const multiProduct = {
-        name: "Multiple Items",
-        price: totalCost,
-        ecoScore: "-",
-        materialCO2: cartItems.reduce(
-          (sum, p) => sum + p.materialCO2 * (p.quantity || 1),
-          0
-        ),
-        shippingCO2: cartItems.reduce(
-          (sum, p) => sum + p.shippingCO2 * (p.quantity || 1),
-          0
-        ),
-      };
-      setCheckoutProduct(multiProduct);
+  setShowCheckout(true); // ✅ just show popup, don’t add orders yet
+};
 
-      setCheckoutQty(1);
-    }
-    setShowCheckout(true);
-  };
 
   return (
     <div className="cart-page-container">
@@ -118,12 +160,37 @@ const ProductCart = ({ cartItems = [], setCartItems,addOrder, products = [] }) =
       </button>
 
       {/* Checkout Popup */}
+
+      {/* <CheckOut
+        show={showCheckout}
+        product={checkoutProduct}
+        quantity={checkoutQty}
+        onConfirm={() => {
+          cartItems.forEach(item => {
+            const orderWithDate = { ...item, date: new Date().toISOString() };
+            addOrder(orderWithDate);
+          });
+          setCartItems([]); // ✅ clears cart after checkout
+          setShowCheckout(false);
+        }}
+        onClose={() => setShowCheckout(false)}
+      /> */}
       <CheckOut
         show={showCheckout}
         product={checkoutProduct}
         quantity={checkoutQty}
+        onConfirm={() => {
+          cartItems.forEach(item => {
+            const orderWithDate = { ...item, date: new Date().toISOString() };
+            addOrder(orderWithDate);
+          });
+          // setCartItems([]); // ✅ clears cart
+          setShowCheckout(false); // ✅ close popup
+        }}
         onClose={() => setShowCheckout(false)}
       />
+
+
     </div>
   );
 };

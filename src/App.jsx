@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
 import RegistrationForm from "./pages/RegistrationForm";
 import Login from "./pages/Login";
 import Home from "./pages/Consumer/Component/Home";
@@ -20,10 +20,28 @@ import AdminCarbonReports from "./pages/Admin/Component/CarbonReports";
 import { useGlobal } from "./Global";
 import { Authenticate } from "./Global";
 
+import Navbar from "./pages/Consumer/Component/ConNavBar";
+import SellerNavBar from "./pages/Seller/Component/SellerNavBar";
+import AdminNavBar from "./pages/Admin/Component/AdminNavBar";
+
+
 
 function App() {
 
   const {products,cartItems,orders,setProducts,setCartItems,setOrders,addToCart,addOrder} = useGlobal();
+  const location = useLocation();
+  // const hideNavbar = ["/", "/login"].includes(location.pathname);
+
+  const showNavbarRoutes = ["/home", "/orders", "/cart"];
+  const showNavbar =
+    showNavbarRoutes.includes(location.pathname) ||
+    location.pathname.startsWith("/productInfo/");
+
+    const sellerRoutes = ["/seller", "/selProducts", "/selAddProduct", "/salesOrders", "/carbonReports"];
+   const showSellerNavbar = sellerRoutes.some(route => location.pathname.startsWith(route));
+
+   const adminRoutes = ["/admin", "/userManagement", "/productApproval", "/adminReports"];
+const showAdminNavbar = adminRoutes.some(route => location.pathname.startsWith(route));
 
   // const [cartItems, setCartItems] = useState([{
   //   id: 1,
@@ -127,7 +145,11 @@ function App() {
 
   return (
     <Authenticate>
+       {showNavbar && <Navbar />}
+       {showSellerNavbar && <SellerNavBar />}
+       {showAdminNavbar && <AdminNavBar />}
     <Routes>
+      
       <Route path="/" element={<RegistrationForm />} />
       <Route path="/login" element={<Login />} />
       <Route path="/home" element={<Home products={products} setProducts={setProducts} addToCart={addToCart} />} />
